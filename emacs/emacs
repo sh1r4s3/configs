@@ -1,0 +1,40 @@
+;; Author: Nikita Ermakov <coffe92@gmail.com> <arei@altlinux.org>
+;; GPLv3
+
+(server-start) ; start an Emacs server
+(global-linum-mode t) ; enable line numbers on the left
+(set-default 'truncate-lines t)
+
+(setq backup-directory-alist '(("" . "~/.emacs.d/backups")))
+(setq auto-save-default nil) ; stop creating #autosave# files
+(setq c-default-style "bsd") ; mainly for ident of { at the beginning of line
+(setq indent-tabs-mode nil) ; use spaces no tab characters
+(setq inhibit-splash-screen t) ; hide welcome screen
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
+(setq-default c-basic-offset 2)     ; same as tab-width
+(setq show-paren-delay 0) ; turn off delay
+(show-paren-mode t) ; show matching pairs of parentheses
+(setq read-quoted-char-radix 16) ; set HEX non-graphic characted insertion
+(setq display-line-numbers t)
+(setq custom-theme-directory '"~/.emacs.d/themes/")
+
+;; pretty
+(load-theme 'tango-dark)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(toggle-frame-maximized)
+(eshell)
+
+;; hooks
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+;; magit
+(defun mu-magit-kill-buffers (param)
+  "Restore window configuration and kill all Magit buffers."
+  (let ((buffers (magit-mode-get-buffers)))
+    (magit-restore-window-configuration)
+    (mapc #'kill-buffer buffers)))
+
+(setq magit-bury-buffer-function #'mu-magit-kill-buffers)
