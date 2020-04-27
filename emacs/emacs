@@ -1,9 +1,14 @@
 ;; Author: Nikita Ermakov <coffe92@gmail.com> <arei@altlinux.org>
 ;; GPLv3
 
+;; Init package.el
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
 (server-start) ; start an Emacs server
-(global-linum-mode t) ; enable line numbers on the left
 (set-default 'truncate-lines t)
+(global-linum-mode t)
 
 (setq backup-directory-alist '(("" . "~/.emacs.d/backups")))
 (setq auto-save-default nil) ; stop creating #autosave# files
@@ -18,19 +23,200 @@
 (setq read-quoted-char-radix 16) ; set HEX non-graphic characted insertion
 (setq display-line-numbers t)
 (setq custom-theme-directory '"~/.emacs.d/themes/")
+(setq-default show-trailing-whitespace t)
+;;(setq eshell-buffer-maximum-size 8192)
+(setq rpm-spec-user-mail-address '"arei@altlinux.org")
+(setq rpm-spec-user-full-name '"Nikita Ermakov")
+
+;; Show current function in the status bar
+(which-function-mode 1)
+
+;; Auth
+(require 'auth-source)
+(setq auth-sources '((:source "/media/cryptvol/emacs-auth")))
 
 ;; pretty
-(load-theme 'tango-dark)
+(load-theme 'afternoon)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (toggle-frame-maximized)
-(eshell)
+(nyan-mode 1)
+
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 'font-lock-warning-face prepend)))))
+
+;;
+;; perspective.el
+;;
+(require 'perspective)
+(persp-mode)
+
+;;
+;; Projectile
+;;
+(require 'projectile)
+(projectile-mode 1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(setq projectile-completion-system 'helm)
+
+;;
+;; Helm
+;;
+(require 'helm)
+(require 'helm-config)
+
+;;
+;; ERC
+;;
+(require 'erc)
+(load "~/.emacs.d/.ercrc.el")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("c335adbb7d7cb79bc34de77a16e12d28e6b927115b992bccc109fb752a365c72" "2d835b43e2614762893dc40cbf220482d617d3d4e2c35f7100ca697f1a388a0e" default)))
+ '(erc-max-buffer-size 32000)
+ '(erc-modules
+   (quote
+    (autojoin button completion dcc fill irccontrols list match menu move-to-prompt netsplit networks noncommands notifications readonly ring scrolltobottom services stamp spelling track truncate)))
+ '(erc-truncate-mode t)
+ '(helm-gtags-auto-update t)
+ '(helm-gtags-ignore-case t)
+ '(helm-gtags-path-style (quote relative))
+ '(helm-gtags-prefix-key "")
+ '(helm-gtags-suggested-key-mapping t)
+ '(package-selected-packages
+   (quote
+    (magit rpm-spec-mode perspective cyberpunk-theme nyan-mode helm-gtags helm-projectile helm markdown-preview-mode))))
+
+;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+(global-set-key (kbd "M-x") 'helm-M-x)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(when (executable-find "curl")
+  (setq helm-google-suggest-use-curl-p t))
+
+(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+      helm-ff-file-name-history-use-recentf t
+      helm-echo-input-in-header-line t)
+
+
+
+;;; Enable helm-gtags-mode
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+;; customize
+
+
+;; key bindings
+(with-eval-after-load 'helm-gtags
+  (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+  (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+  (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+  (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+  (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+  (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+  (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))
+
+(helm-mode 1)
+(helm-projectile-on)
+(helm-gtags-mode 1)
+
+;;
+;; Local plugins
+;;
+(add-to-list 'load-path "~/.emacs.d/plugins")
+(require 'fixme-mode)
+(require 'csh-mode)
+
+ (setq csh-mode-hook
+      (function (lambda ()
+         (font-lock-mode 1)             ;; font-lock the buffer
+         (setq csh-indent 8)
+         (setq csh-tab-always-indent t)
+         (setq csh-match-and-tell t)
+         (setq csh-align-to-keyword t)	;; Turn on keyword alignment
+	 )))
+;;
+;; IDO
+;;
+;;(require 'ido)
+;;(ido-mode t)
+
+;;
+;; TRAMP
+;;
+(require 'tramp)
+(require 'tramp-cache)
+
+;; For RACF BNL
+(add-to-list 'tramp-methods
+ '("rterm"
+  (tramp-login-program "ssh")
+  (tramp-login-args
+   (("-l" "%u")
+    ("-p" "%p")
+    ("%c")
+    ("-e" "none")
+    ("%h")))
+  (tramp-async-args
+   (("-q")))
+  (tramp-remote-shell "rterm")
+  (tramp-remote-shell-login
+   ("-i"))
+  (tramp-remote-shell-args
+   ("-i"))
+  (tramp-copy-program "cp")
+  (tramp-copy-args
+   (("-t" "%k")
+    ("-p")
+    ("-r")
+    ("-s")
+    ("-c")))
+  (tramp-copy-env
+   (("RSYNC_RSH")
+    ("ssh" "%c")))
+  (tramp-copy-keep-date t)
+  (tramp-copy-keep-tmpfile t)
+  (tramp-copy-recursive t)))
+
+;; Current now working.
+(add-to-list 'tramp-methods
+ '("hasher"
+   (tramp-login-program "hsh-run")
+   (tramp-remote-shell "/bin/bash")
+   (tramp-copy-program "cp")
+   (tramp-copy-args ())
+   (tramp-copy-keep-date t)
+   (tramp-copy-keep-tmpfile t)
+   (tramp-copy-recursive t)))
+
 
 ;; hooks
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;;(add-hook 'eshell-output-filter-functions #'eshell-truncate-buffer)
 
 ;; magit
+(require 'magit)
 (defun mu-magit-kill-buffers (param)
   "Restore window configuration and kill all Magit buffers."
   (let ((buffers (magit-mode-get-buffers)))
@@ -38,3 +224,60 @@
     (mapc #'kill-buffer buffers)))
 
 (setq magit-bury-buffer-function #'mu-magit-kill-buffers)
+
+;; eshell prompt
+(setq eshell-prompt-regexp "^[^#$\n]*[#$] "
+      eshell-prompt-function
+      (lambda nil
+        (concat
+         (user-login-name) "@" (system-name) " "
+         (if (string= (eshell/pwd) (getenv "HOME"))
+             "~" (eshell/basename (eshell/pwd)))
+         (if (= (user-uid) 0) "# " "$ "))))
+
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
+(defun unfill-paragraph (&optional region)
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive (progn (barf-if-buffer-read-only) '(t)))
+  (let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
+
+;; Florian code for linum
+;; https://www.emacswiki.org/emacs/linum-off.el
+;; Make it as a separate package?
+(require 'linum)
+
+(defcustom linum-disabled-modes-list '(eshell-mode wl-summary-mode compilation-mode org-mode text-mode dired-mode doc-view-mode image-mode)
+  "* List of modes disabled when global linum mode is on"
+  :type '(repeat (sexp :tag "Major mode"))
+  :tag " Major modes where linum is disabled: "
+  :group 'linum
+  )
+(defcustom linum-disable-starred-buffers 't
+  "* Disable buffers that have stars in them like *Gnu Emacs*"
+  :type 'boolean
+  :group 'linum)
+
+(defun linum-on ()
+  "* When linum is running globally, disable line number in modes defined in `linum-disabled-modes-list'. Changed by linum-off. Also turns off numbering in starred modes like *scratch*"
+
+  (unless (or (minibufferp)
+              (member major-mode linum-disabled-modes-list)
+              (string-match "*" (buffer-name))
+              (> (buffer-size) 3000000)) ;; disable linum on buffer greater than 3MB, otherwise it's unbearably slow
+    (linum-mode 1)))
+
+(provide 'linum-off)
+(require 'linum-off)
+
+;; launch eshell
+;; (eshell)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
