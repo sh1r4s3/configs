@@ -46,6 +46,20 @@
           (lambda ()
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 'font-lock-warning-face prepend)))))
+;;
+;; EMMS
+;;
+(require 'emms-setup)
+(emms-all)
+(emms-default-players)
+(setq emms-source-file-default-directory "/media/garmr/misc/others/Music")
+(require 'emms-player-mpv)
+(require 'emms-source-file)
+(require 'emms-source-playlist)
+(setq emms-player-list '(emms-player-mpv))
+;; Use GNU/find to speed-up tracks searching.
+(setq emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find)
+(setq emms-playlist-buffer-name "*Music*")
 
 ;;
 ;; perspective.el
@@ -93,7 +107,7 @@
  '(helm-gtags-suggested-key-mapping t)
  '(package-selected-packages
    (quote
-    (magit rpm-spec-mode perspective cyberpunk-theme nyan-mode helm-gtags helm-projectile helm markdown-preview-mode))))
+    (helm-emms emms magit rpm-spec-mode perspective cyberpunk-theme nyan-mode helm-gtags helm-projectile helm markdown-preview-mode))))
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
