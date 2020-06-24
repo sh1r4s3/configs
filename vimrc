@@ -26,6 +26,8 @@ set hlsearch
 set iskeyword&
 set mouse=a
 set textwidth=78
+set formatoptions=croq1jp
+set modeline
 
 " Indentation
 set shiftwidth=4
