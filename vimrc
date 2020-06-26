@@ -42,6 +42,10 @@ set list
 " Spell checking
 set spell spelllang=en,ru
 
+" Key binding
+nnoremap <Left> :tabp<Enter>
+nnoremap <Right> :tabn<Enter>
+
 fun! s:AddChangeLog()
   let curtime = strftime("%a %b %d %Y")
   put ='* '.curtime.' Nikita Ermakov <arei@altlinux.org> '
