@@ -1,15 +1,30 @@
 " Load plugins with
 " https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
-Plug 'liuchengxu/space-vim-dark'
+Plug 'sainnhe/sonokai'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'sheerun/vim-polyglot'
+Plug 'vim-scripts/gtags.vim'
 call plug#end()
 
 "
-colorscheme space-vim-dark
+if has ('termguicolors')
+    set termguicolors
+endif
+set background=dark
+set cursorline
+
+" The configuration options should be placed before `colorscheme sonokai`.
+let g:sonokai_style = 'andromeda'
+let g:sonokai_enable_italic = 0
+let g:sonokai_disable_italic_comment = 1
+
+colorscheme sonokai
+
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='violet'
+let g:airline#extensions#searchcount#enabled = 0
+let g:airline_theme='sonokai'
 
 runtime ftplugin/man.vim
 
@@ -18,6 +33,7 @@ set nobackup
 set directory=$HOME/.vim/swp//
 
 "
+set backspace=indent,eol,start
 set number
 set relativenumber
 set incsearch
@@ -25,6 +41,7 @@ set nowrapscan
 set hlsearch
 set iskeyword&
 set mouse=a
+set clipboard=unnamed
 set textwidth=78
 set formatoptions=croq1jp
 set modeline
