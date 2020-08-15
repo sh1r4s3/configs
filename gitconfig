@@ -1,0 +1,17 @@
+[user]
+    email = sh1r4s3@mail.si-head.nl
+    name = Nikita Ermakov
+[gpg]
+    program = gpg2
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    sh = show
+    cl = clone
+    logf = log --graph
+    staged = diff --cached
+    unstage = restore --staged
+[pull]
+    rebase = false
