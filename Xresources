@@ -1,32 +1,37 @@
 ! terminal colors ------------------------------------------------------------
 
-! tangoesque scheme
-XTerm*background: #111111
-XTerm*foreground: #babdb6
-! Black (not tango) + DarkGrey
-XTerm*color0:  #000000
-XTerm*color8:  #555753
+! rebecca scheme
+*.background:  #292a44
+*.foreground:  #e8e6ed
+*.cursorColor: #b89bf9
+! Blackness + Black
+*.color0:  #12131e
+*.color8:  #666699
 ! DarkRed + Red
-XTerm*color1:  #ff6565
-XTerm*color9:  #ff8d8d
+*.color1:  #dd7755
+*.color9:  #ff92cd
 ! DarkGreen + Green
-XTerm*color2:  #93d44f
-XTerm*color10: #c8e7a8
+*.color2:  #04dbb5
+*.color10: #01eac0
 ! DarkYellow + Yellow
-XTerm*color3:  #eab93d
-XTerm*color11: #ffc123
+*.color3:  #f2e7b7
+*.color11: #fffca8
 ! DarkBlue + Blue
-XTerm*color4:  #204a87
-XTerm*color12: #3465a4
+*.color4:  #7aa5ff
+*.color12: #69c0fa
 ! DarkMagenta + Magenta
-XTerm*color5:  #ce5c00
-XTerm*color13: #f57900
+*.color5:  #bf9cf9
+*.color13: #c17ff8
 !DarkCyan + Cyan (both not tango)
-XTerm*color6:  #89b6e2
-XTerm*color14: #46a4ff
+*.color6:  #56d3c2
+*.color14: #8bfde1
 ! LightGrey + White
-XTerm*color7:  #cccccc
-XTerm*color15: #ffffff
+*.color7:  #e4e3e9
+*.color15: #f4f2f9
+
+*.colorBD:     #ccccff
+!*.colorIT:
+*.colorUT:     #596181
 
 ! X cursor
 
