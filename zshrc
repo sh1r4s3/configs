@@ -1,13 +1,33 @@
 # Prompt
-export prompt='%F{green}%n%F{blue}[%2d]%F{green}%#%f '
+export prompt='%F{green}%n@%m%F{blue}[%2d]%F{green}%#%f '
 
-# Aliases
+# Get OS type
+export OS_TYPE="$(uname)"
+
+# Save system PATH
+export SAVED_PATH="$PATH"
+
+# Common aliases
 alias g='git'
-alias ls='ls -F --color'
 alias grep='grep --color=auto'
 
-export VANILLA_PATH="$PATH"
-export PATH="$HOME/bin/:$PATH"
+# OS depended aliases
+case "$OS_TYPE" in
+    "Darwin")
+        alias ls='ls -G -F'
+        ;;
+    "Linux")
+        alias ls='ls --color=auto -F'
+        ;;
+esac
+
+# Alt+Backspace and Ctrl+w behaviour like in bash
+backward-kill-dir () {
+    local WORDCHARS=${WORDCHARS/\/}
+    zle backward-kill-word
+}
+zle -N backward-kill-dir
+bindkey '^[^?' backward-kill-dir
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -44,23 +64,11 @@ ytfm() { # YOUTUBE FM :DDD
     mpv --no-video ytdl://ytsearch10:"$@";
 }
 
-gen_password() {
-    # Need to touch file manually.
-    # How to use:
-    #  gen_password <NAME OF RESOURCE>
-    TO_LIST=/Volumes/garmr/arei/passwords/passwords
-    [ -f "$TO_LIST" ] || { echo "No file $TO_LIST"; return 1; }
-    PASSWORD="$(head -c 16 /dev/urandom | base64 | sed 's;^\([^=]*\).*;\1;g')"
-    echo "$PASSWORD $1" >> "$TO_LIST"
-    echo -n "$PASSWORD" | pbcopy
-}
-
 absname() {
   # $1 : relative filename
   [ -n "${1-}" ] || { echo "Usage: absname <filename>"; return 1 }
   echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
 }
 
-# Source third-party scripts
-. $HOME/work/git/github/fzf/shell/completion.zsh
-. $HOME/work/git/github/fzf/shell/key-bindings.zsh
+# Source local specific config
+[ ! -f "$HOME/.zshrc.local" ] || source "$HOME/.zshrc.local"
