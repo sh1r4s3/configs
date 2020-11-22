@@ -1,0 +1,376 @@
+* General configuration
+** Require built-in packages
+   #+BEGIN_SRC emacs-lisp
+     (require 'tramp)
+     (require 'linum)
+   #+END_SRC
+** Set the needed packages
+   The idea to autoload packages was coined by [[https://wikemacs.org/wiki/Package.el][this]].
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+     (defvar pkgs '(lsp-mode
+                    perspective
+                    projectile
+                    helm
+                    helm-gtags
+                    helm-projectile
+                    magit
+                    org-superstar
+                    lsp-treemacs
+                    clang-capf
+                    company-lsp company
+                    flycheck
+                    lsp-ui
+                    lsp-mode
+                    go-mode
+                    rebecca-theme
+                    magit
+                    rpm-spec-mode
+                    perspective
+                    nyan-mode
+                    markdown-preview-mode)
+       "My personal list of packages")
+
+     (defun check-pkgs ()
+       (cl-loop for p in pkgs
+                when (not (package-installed-p p)) do (cl-return nil)
+                finally (cl-return t)))
+
+     (unless (check-pkgs)
+       ;; check for new packages (package versions)
+       (package-refresh-contents)
+       ;; install the missing packages
+       (dolist (p pkgs)
+         (when (not (package-installed-p p))
+           (package-install p))))
+
+     (package-initialize)
+   #+END_SRC
+** Start Emacs server
+   #+BEGIN_SRC emacs-lisp
+     (server-start)
+   #+END_SRC
+** OS specific
+*** Help Emacs to find ispell program on Darwin
+    #+BEGIN_SRC emacs-lisp
+      (if (string= system-type "Darwin")
+          (setq ispell-program-name '"/usr/local/bin/ispell"))
+    #+END_SRC
+*** PATH
+    #+BEGIN_SRC emacs-lisp
+      (if (string= system-type "Darwin")
+          (setenv "PATH"
+                  (concat
+                   "/Library/TeX/texbin" ":"
+                   "/usr/local/bin" ":"
+                   "/usr/local/opt/llvm/bin" ":"
+                   (getenv "PATH")
+                   )))
+    #+END_SRC
+*** [[* LSP OS specific][LSP]]
+** Local plugins
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'load-path "~/.emacs.d/plugins")
+   #+END_SRC
+* Customize
+** Line numbering
+   #+BEGIN_SRC emacs-lisp
+     (global-linum-mode t)
+     (setq display-line-numbers t)
+   #+END_SRC
+** Line
+
+   #+BEGIN_SRC emacs-lisp
+     (set-default 'truncate-lines t)
+   #+END_SRC
+
+** Backup
+
+   #+BEGIN_SRC emacs-lisp
+     (setq backup-directory-alist '(("" . "~/.emacs.d/backups")))
+     (setq auto-save-default nil)
+   #+END_SRC
+
+** C settings
+*** Use for the right indent of curly braces {}
+    #+BEGIN_SRC emacs-lisp
+      (setq-default c-default-style "bsd")
+    #+END_SRC
+*** Indentation
+    #+BEGIN_SRC emacs-lisp
+      (setq-default c-basic-offset 2)
+    #+END_SRC
+** General indentation
+   #+BEGIN_SRC emacs-lisp
+     (setq-default indent-tabs-mode nil)
+     (setq-default tab-width 2)
+   #+END_SRC
+** Appearance
+*** Parentheses
+    #+BEGIN_SRC emacs-lisp
+      (setq show-paren-delay 0) ; turn off delay
+      (show-paren-mode t) ; show matching pairs of parentheses
+    #+END_SRC
+*** Theme
+    #+BEGIN_SRC emacs-lisp
+      (setq custom-theme-directory '"~/.emacs.d/themes/")
+      (custom-set-variables '(custom-safe-themes
+                              '("e208e45345b91e391fa66ce028e2b30a6aa82a37da8aa988c3f3c011a15baa22"
+                                "57e3f215bef8784157991c4957965aa31bac935aca011b29d7d8e113a652b693"
+                                "c335adbb7d7cb79bc34de77a16e12d28e6b927115b992bccc109fb752a365c72"
+                                "2d835b43e2614762893dc40cbf220482d617d3d4e2c35f7100ca697f1a388a0e"
+                                default)))
+      (load-theme 'rebecca)
+    #+END_SRC
+*** Nyan cat ^_^
+    #+BEGIN_SRC emacs-lisp
+      (nyan-mode 1)
+    #+END_SRC
+*** Highlight FIXME, TODO, BUG in the comments prog-mode
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'prog-mode-hook
+                (lambda ()
+                  (font-lock-add-keywords nil
+                                          '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 'font-lock-warning-face prepend)))))
+    #+END_SRC
+*** Org mode
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'org-superstar-mode)
+#+END_SRC
+*** Other
+    #+BEGIN_SRC emacs-lisp
+      (setq inhibit-splash-screen t)
+      (setq read-quoted-char-radix 16) ; set HEX non-graphic characted insertion
+      (setq-default show-trailing-whitespace t)
+      (which-function-mode 1) ;; show current function on status bar
+      (menu-bar-mode -1)
+      (tool-bar-mode -1)
+      (toggle-frame-maximized)
+    #+END_SRC
+** RPM
+   #+BEGIN_SRC emacs-lisp
+     (setq rpm-spec-user-mail-address '"arei@altlinux.org")
+     (setq rpm-spec-user-full-name '"Nikita Ermakov")
+   #+END_SRC
+** LSP
+*** General settings
+    [[gc-cons-threshold is a hack][It]] says that the default value for *gc-cons-threshold* is low.
+    #+BEGIN_SRC emacs-lisp
+      (require 'lsp-mode)
+      (add-hook 'prog-mode-hook #'lsp)
+      (setq lsp-keymap-prefix "s-l")
+      (setq gc-cons-threshold (* (* 1024 1024) 32))
+      (setq read-process-output-max (* 1024 1024))
+      (setq lsp-completion-provider :capf)
+      (setq lsp-idle-delay 1.0)
+    #+END_SRC
+*** LSP OS specific
+    #+BEGIN_SRC emacs-lisp
+      (defun m-lsp-darwin ()
+        (add-hook 'prog-mode-hook
+                  (lambda () (setq flycheck-clang-include-path
+                                   (list (expand-file-name "/usr/local/include")
+                                         (expand-file-name "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include")
+                                         (expand-file-name "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include")
+                                         (expand-file-name "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include")
+                                         (expand-file-name "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"))))))
+      (if (string= system-type "Darwin")
+          (m-lsp-darwin))
+    #+END_SRC
+** Multiple workspaces
+   ~(persp-mode)~ would automatically create a default workspace
+   (perspective). By defaut all commands prefixed with ~C-x x~. Check the
+   [[https://github.com/nex3/perspective-el][official web page]] for more information.
+   #+BEGIN_SRC emacs-lisp
+     (require 'perspective)
+     (persp-mode)
+   #+END_SRC
+** Project manager
+   #+BEGIN_SRC emacs-lisp
+     (require 'projectile)
+     (projectile-mode 1)
+     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+     (setq projectile-completion-system 'helm)
+   #+END_SRC
+** Incremental completions, selections etc
+   #+BEGIN_SRC emacs-lisp
+     (require 'helm)
+     (require 'helm-config)
+     (setq helm-gtags-auto-update t)
+     (setq helm-gtags-ignore-case t)
+     (setq helm-gtags-path-style 'relative)
+     (setq helm-gtags-prefix-key "")
+     (setq helm-gtags-suggested-key-mapping t)
+   #+END_SRC
+
+   The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+   Changed to "C-c h". Note: We must set "C-c h" globally, because we
+   cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c h") 'helm-command-prefix)
+     (global-unset-key (kbd "C-x c"))
+     (global-set-key (kbd "M-x") 'helm-M-x)
+   #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+     (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+     (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+     (when (executable-find "curl")
+       (setq helm-google-suggest-use-curl-p t))
+
+     (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+           helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+           helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+           helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+           helm-ff-file-name-history-use-recentf t
+           helm-echo-input-in-header-line t)
+   #+END_SRC
+
+   Enable gtags helm mode:
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'c-mode-hook 'helm-gtags-mode)
+     (add-hook 'c++-mode-hook 'helm-gtags-mode)
+     (add-hook 'asm-mode-hook 'helm-gtags-mode)
+   #+END_SRC
+
+   Key bindings:
+   #+BEGIN_SRC emacs-lisp
+     (with-eval-after-load 'helm-gtags
+       (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+       (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+       (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+       (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+       (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+       (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+       (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))
+   #+END_SRC
+
+   Enable helm:
+   #+BEGIN_SRC emacs-lisp
+     (helm-mode 1)
+     (helm-projectile-on)
+     (helm-gtags-mode 1)
+   #+END_SRC
+** TRAMP
+
+   For RACF BNL (currently seems to not working):
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'tramp-methods
+                  '("rterm"
+                    (tramp-login-program "ssh")
+                    (tramp-login-args
+                     (("-l" "%u")
+                      ("-p" "%p")
+                      ("%c")
+                      ("-e" "none")
+                      ("%h")))
+                    (tramp-async-args
+                     (("-q")))
+                    (tramp-remote-shell "rterm")
+                    (tramp-remote-shell-login
+                     ("-i"))
+                    (tramp-remote-shell-args
+                     ("-i"))
+                    (tramp-copy-program "cp")
+                    (tramp-copy-args
+                     (("-t" "%k")
+                      ("-p")
+                      ("-r")
+                      ("-s")
+                      ("-c")))
+                    (tramp-copy-env
+                     (("RSYNC_RSH")
+                      ("ssh" "%c")))
+                    (tramp-copy-keep-date t)
+                    (tramp-copy-keep-tmpfile t)
+                    (tramp-copy-recursive t)))
+   #+END_SRC
+
+   For hasher (well, not working either :) ):
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'tramp-methods
+                  '("hasher"
+                    (tramp-login-program "hsh-run")
+                    (tramp-remote-shell "/bin/bash")
+                    (tramp-copy-program "cp")
+                    (tramp-copy-args ())
+                    (tramp-copy-keep-date t)
+                    (tramp-copy-keep-tmpfile t)
+                    (tramp-copy-recursive t)))
+   #+END_SRC
+
+** Spell checking (fly spell):
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'text-mode-hook 'flyspell-mode)
+     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+   #+END_SRC
+
+** MaGit
+   #+BEGIN_SRC emacs-lisp
+     (require 'magit)
+     (defun mu-magit-kill-buffers (param)
+       "Restore window configuration and kill all Magit buffers."
+       (let ((buffers (magit-mode-get-buffers)))
+         (magit-restore-window-configuration)
+         (mapc #'kill-buffer buffers)))
+
+     (setq magit-bury-buffer-function #'mu-magit-kill-buffers)
+   #+END_SRC
+
+** eshell
+   Prompt:
+   #+BEGIN_SRC emacs-lisp
+     (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
+           eshell-prompt-function
+           (lambda nil
+             (concat
+              (user-login-name) "@" (system-name) " "
+              (if (string= (eshell/pwd) (getenv "HOME"))
+                  "~" (eshell/basename (eshell/pwd)))
+              (if (= (user-uid) 0) "# " "$ "))))
+   #+END_SRC
+
+
+   Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
+   #+BEGIN_SRC emacs-lisp
+     (defun unfill-paragraph (&optional region)
+       "Takes a multi-line paragraph and makes it into a single line of text."
+       (interactive (progn (barf-if-buffer-read-only) '(t)))
+       (let ((fill-column (point-max))
+             ;; This would override `fill-column' if it's an integer.
+             (emacs-lisp-docstring-fill-column t))
+         (fill-paragraph nil region)))
+   #+END_SRC
+   [[https://www.emacswiki.org/emacs/linum-off.el][Florian code]] for linum
+   Make it as a separate package?
+   #+BEGIN_SRC emacs-lisp
+     (defcustom linum-disabled-modes-list '(eshell-mode wl-summary-mode compilation-mode org-mode text-mode dired-mode doc-view-mode image-mode)
+       "* List of modes disabled when global linum mode is on"
+       :type '(repeat (sexp :tag "Major mode"))
+       :tag " Major modes where linum is disabled: "
+       :group 'linum
+       )
+     (defcustom linum-disable-starred-buffers 't
+       "* Disable buffers that have stars in them like *Gnu Emacs*"
+       :type 'boolean
+       :group 'linum)
+
+     (defun linum-on ()
+       "* When linum is running globally, disable line number in modes defined in `linum-disabled-modes-list'. Changed by linum-off. Also turns off numbering in starred modes like *scratch*"
+
+       (unless (or (minibufferp)
+                   (member major-mode linum-disabled-modes-list)
+                   (string-match "*" (buffer-name))
+                   (> (buffer-size) 3000000)) ;; disable linum on buffer greater than 3MB, otherwise it's unbearably slow
+         (linum-mode 1)))
+
+     (provide 'linum-off)
+     (require 'linum-off)
+   #+END_SRC
+
+   Launch eshell:
+   #+BEGIN_SRC emacs-lisp
+     ;; (eshell)
+   #+END_SRC
