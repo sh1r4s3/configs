@@ -158,7 +158,8 @@
     #+BEGIN_SRC emacs-lisp
       (require 'lsp-mode)
       (add-hook 'prog-mode-hook #'lsp)
-      (setq lsp-keymap-prefix "s-l")
+      (setq lsp-keymap-prefix "M-p")
+      (define-key lsp-mode-map (kbd "M-p") lsp-command-map)
       (setq gc-cons-threshold (* (* 1024 1024) 32))
       (setq read-process-output-max (* 1024 1024))
       (setq lsp-completion-provider :capf)
