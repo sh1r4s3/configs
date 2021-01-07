@@ -134,6 +134,7 @@
                                           '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 'font-lock-warning-face prepend)))))
     #+END_SRC
 *** Org mode
+<<org-mode-appearance>>
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'org-superstar-mode)
 #+END_SRC
@@ -375,3 +376,9 @@
    #+BEGIN_SRC emacs-lisp
      ;; (eshell)
    #+END_SRC
+** Org-mode
+*** [[org-mode-appearance][Appearance]]
+*** Enforce TO-DO dependencies
+#+BEGIN_SRC emacs-lisp
+  (setq org-enforce-todo-dependencies t)
+#+END_SRC
