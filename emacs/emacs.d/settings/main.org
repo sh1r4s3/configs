@@ -382,3 +382,14 @@
 #+BEGIN_SRC emacs-lisp
   (setq org-enforce-todo-dependencies t)
 #+END_SRC
+*** Add [[https://orgmode.org/manual/Closing-items.html#Closing-items][CLOSED and timestamp]] when a TO-DO task was closed
+#+BEGIN_SRC emacs-lisp
+  (setq org-log-done 'time)
+#+END_SRC
+*** Agenda
+*** Key bindings suggested [[https://orgmode.org/manual/Activation.html#Activation][here]]
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
+#+END_SRC
