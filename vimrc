@@ -49,7 +49,7 @@ set modeline
 " Indentation
 set shiftwidth=4
 set expandtab
-set cinoptions=(0
+set cinoptions=(0t0
 filetype indent on
 
 " Make some special characters visible
