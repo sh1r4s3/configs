@@ -13,7 +13,7 @@ if has ('termguicolors')
     set termguicolors
 endif
 set background=dark
-set cursorline
+"set cursorline
 
 " The configuration options should be placed before `colorscheme sonokai`.
 let g:sonokai_style = 'andromeda'
@@ -49,7 +49,7 @@ set modeline
 " Indentation
 set shiftwidth=4
 set expandtab
-set cinoptions=(0t0
+set cinoptions=(0
 filetype indent on
 
 " Make some special characters visible
