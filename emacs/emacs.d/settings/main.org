@@ -28,6 +28,7 @@
                     rpm-spec-mode
                     perspective
                     nyan-mode
+                    gnuplot
                     markdown-preview-mode)
        "My personal list of packages")
 
@@ -57,16 +58,18 @@
           (setq ispell-program-name '"/usr/local/bin/ispell"))
     #+END_SRC
 *** PATH
-    #+BEGIN_SRC emacs-lisp
-      (if (string= system-type "darwin")
-          (setenv "PATH"
-                  (concat
-                   "/Library/TeX/texbin" ":"
-                   "/usr/local/bin" ":"
-                   "/usr/local/opt/llvm/bin" ":"
-                   (getenv "PATH")
-                   )))
-    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (if (string= system-type "darwin")
+      (setenv "PATH"
+              (concat
+               "/Library/TeX/texbin" ":"
+               "/usr/local/bin" ":"
+               "/usr/local/opt/llvm/bin" ":"
+               (getenv "PATH")
+              )
+              (setq exec-path (append exec-path '("/usr/local/bin")))
+              ))
+#+END_SRC
 *** [[* LSP OS specific][LSP]]
 ** Local plugins
    #+BEGIN_SRC emacs-lisp
@@ -387,9 +390,17 @@
   (setq org-log-done 'time)
 #+END_SRC
 *** Agenda
+#+BEGIN_SRC emacs-lisp
+(setq org-archive-location "~/arei/todo_archive.org")
+#+END_SRC
 *** Key bindings suggested [[https://orgmode.org/manual/Activation.html#Activation][here]]
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c c") 'org-capture)
 #+END_SRC
+** gnuplot
+    #+BEGIN_SRC emacs-lisp
+      (if (string= system-type "darwin")
+          (setq gnuplot-program "/usr/local/bin/gnuplot"))
+    #+END_SRC
