@@ -19,7 +19,7 @@
    '("e208e45345b91e391fa66ce028e2b30a6aa82a37da8aa988c3f3c011a15baa22" "57e3f215bef8784157991c4957965aa31bac935aca011b29d7d8e113a652b693" "c335adbb7d7cb79bc34de77a16e12d28e6b927115b992bccc109fb752a365c72" "2d835b43e2614762893dc40cbf220482d617d3d4e2c35f7100ca697f1a388a0e" default))
  '(org-agenda-files '("~/arei/todo.org"))
  '(package-selected-packages
-   '(gnuplot visual-regexp rpm-spec-mode rebecca-theme perspective org-bullets nyan-mode markdown-preview-mode magit lsp-ui lsp-treemacs helm-projectile helm-gtags go-mode flycheck company-lsp clang-capf afternoon-theme)))
+   '(gnuplot visual-regexp rpm-spec-mode rebecca-theme perspective org-bullets nyan-mode markdown-preview-mode magit lsp-ui lsp-treemacs helm-projectile helm-gtags go-mode flycheck clang-capf afternoon-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

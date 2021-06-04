@@ -18,7 +18,7 @@
                     org-superstar
                     lsp-treemacs
                     clang-capf
-                    company-lsp company
+                    company
                     flycheck
                     lsp-ui
                     lsp-mode
