@@ -391,7 +391,7 @@
 #+END_SRC
 *** Agenda
 #+BEGIN_SRC emacs-lisp
-(setq org-archive-location "~/arei/todo_archive.org")
+(setq org-archive-location "~/arei/todo_archive.org::")
 #+END_SRC
 *** Key bindings suggested [[https://orgmode.org/manual/Activation.html#Activation][here]]
 #+BEGIN_SRC emacs-lisp
