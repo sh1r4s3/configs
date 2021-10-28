@@ -78,6 +78,9 @@ function s:manv(manpage, number = -1)
 endfunction
 command Manv -nargs=+ call s:manv
 
+highlight ExtraWhitespace ctermbg=darkgreen guibg=lightgreen
+match ExtraWhitespace /\S\+\zs\s\+$/
+match ExtraWhitespace /\zs\s\+$/
 
 " To read:
 " 'cpoptions'
