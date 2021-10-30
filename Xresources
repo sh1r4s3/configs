@@ -53,18 +53,17 @@ xterm*VT100.cutToBeginningOfLine: false
 xterm*VT100.cursorUnderLine: true
 xterm*VT100.cursorBlink: true
 xterm*VT100.cursorColor: #00ff00
-xterm*VT100.visualBell: true
-xterm*VT100.visualBellLine: true
+! xterm*VT100.visualBell: true
+! xterm*VT100.visualBellLine: true
 
 XTerm*metaSendsEscape:    true
 XTerm*locale:             true
 Xterm*saveLines:          4096
 xterm*VT100.geometry:     80x25
-xterm*faceName:           Input:style=Regular:size=10
-xterm*font:              -*-input-medium-r-*-*-16-*-*-*-*-*-*-*
+xterm*faceName:           InputMono:size=10
 xterm*dynamicColors:      true
 xterm*utf8:               2
-xterm*eightBitInput:      true
+xterm*eightBitInput:      false
 xterm*scrollKey:          true
 xterm*scrollTtyOutput:    false
 xterm*scrollBar:          true
@@ -75,7 +74,11 @@ xterm*toolBar:            false
 ! Allow sixel graphics. (Try: "convert -colors 16 foo.jpg sixel:-").
 xterm*decTerminalID:      vt340
 ! Allow lsix to read the terminal window size (op #14)
-xterm*allowWindowOps:      False
-xterm*disallowedWindowOps: 1,2,3,4,5,6,7,8,9,11,13,18,19,20,21,GetSelection,SetSelection,SetWinLines,SetXprop
+xterm*allowWindowOps:      false
+xterm*disallowedWindowOps: 20,21,GetSelection,SetWinLines,SetXprop
 
-
+! Open URLs
+! https://lukas.zapletalovi.com/2013/07/hidden-gems-of-xterm.html
+xterm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+xterm*on3Clicks: regex [[:alpha:]]+://([[:alnum:]!#+,./=?@_~-]|(%[[:xdigit:]][[:xdigit:]]))+
+xterm*translations: #override Shift <Btn1Up>: exec-formatted("xdg-open '%t'", PRIMARY)  select-start() select-end()
