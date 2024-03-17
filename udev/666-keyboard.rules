@@ -1,0 +1,15 @@
+ACTION=="remove", GOTO="keyboard_end"
+SUBSYSTEM!="input", GOTO="keyboard_end"
+ENV{ID_INPUT_MOUSE}=="1", GOTO="keyboard_start"
+ENV{ID_INPUT_KEYBOARD}=="1", GOTO="keyboard_start"
+GOTO="keyboard_end"
+
+LABEL="keyboard_start"
+
+KERNELS=="input*", ENV{ID_INPUT_MOUSE}=="1", \
+	RUN{program}="/etc/X11/xinit/xinitrc.d/99-autorepeat.sh", GOTO="keyboard_end"
+
+KERNELS=="input*", ENV{ID_INPUT_KEYBOARD}=="1", \
+	RUN{program}="/etc/X11/xinit/xinitrc.d/99-autorepeat.sh"
+
+LABEL="keyboard_end"
