@@ -8,10 +8,13 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-scripts/gtags.vim'
 Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rootkiter/vim-hexedit'
 Plug 'sjbach/lusty'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-abolish'
 Plug 'masukomi/vim-markdown-folding'
 call plug#end()
 
@@ -41,6 +44,7 @@ set nobackup
 set directory=$HOME/.vim/swp//
 
 let g:lsp_auto_enable = 0
+let g:lsp_diagnostics_enabled = 0
 " LSP: register servers
 if executable('clangd')
     au User lsp_setup call lsp#register_server({
@@ -63,7 +67,7 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> <leader>rn <plug>(lsp-rename)
     nmap <buffer> [g <plug>(lsp-previous-diagnostic)
     nmap <buffer> ]g <plug>(lsp-next-diagnostic)
-    nmap <buffer> K <plug>(lsp-hover)
+    nmap <buffer> <c-k> <plug>(lsp-hover)
     inoremap <buffer> <expr><c-f> lsp#scroll(+4)
     inoremap <buffer> <expr><c-d> lsp#scroll(-4)
 
