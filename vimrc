@@ -101,7 +101,6 @@ set modeline
 set shiftwidth=4
 set expandtab
 set cinoptions=(0,j1,ws,Ws
-filetype indent on
 
 " Make some special characters visible
 set listchars=trail:·,tab:❭…
@@ -149,10 +148,8 @@ syntax enable
 
 " vim-markdown-folding
 set nocompatible
-if has("autocmd")
-    filetype plugin indent on
-endif
-autocmd FileType markdown set foldexpr=NestedMarkdownFolds()
+autocmd FileType markdown setlocal foldexpr=NestedMarkdownFolds()
+autocmd FileType c setlocal textwidth=0 shiftwidth=2 softtabstop=2
 
 " To read:
 " 'cpoptions'
