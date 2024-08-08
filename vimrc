@@ -152,6 +152,15 @@ autocmd FileType markdown setlocal foldexpr=NestedMarkdownFolds()
 autocmd FileType c setlocal textwidth=0 shiftwidth=2 softtabstop=2
 autocmd BufNewFile,BufRead *.schema setlocal filetype=json
 
+" Make use of clang-format
+if has('python')
+  map <C-i> :pyf /usr/lib/llvm/17/share/clang/clang-format.py<cr>
+  imap <C-i> <c-o>:pyf /usr/lib/llvm/17/share/clang/clang-format.py<cr>
+elseif has('python3')
+  map <C-i> :py3f /usr/lib/llvm/17/share/clang/clang-format.py<cr>
+  imap <C-i> <c-o>:py3f /usr/lib/llvm/17/share/clang/clang-format.py<cr>
+endif
+
 " To read:
 " 'cpoptions'
 " 'relativenumber'
