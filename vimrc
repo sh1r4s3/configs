@@ -2,7 +2,7 @@
 " https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
 " Plug 'sainnhe/sonokai'
-Plug 'dracula/vim'
+Plug 'sh1r4s3/vim' "'dracula/vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'sheerun/vim-polyglot'
