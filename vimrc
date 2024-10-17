@@ -16,6 +16,8 @@ Plug 'sjbach/lusty'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
 Plug 'masukomi/vim-markdown-folding'
+Plug 'junegunn/fzf'
+Plug 'vim/killersheep'
 call plug#end()
 
 "
