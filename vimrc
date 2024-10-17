@@ -101,7 +101,7 @@ set formatoptions=croq1jp
 set modeline
 
 " Indentation
-set shiftwidth=4
+set shiftwidth=2
 set expandtab
 set cinoptions=(0,j1,ws,Ws
 
@@ -153,6 +153,7 @@ syntax enable
 set nocompatible
 autocmd FileType markdown setlocal foldexpr=NestedMarkdownFolds()
 autocmd FileType c setlocal textwidth=0 shiftwidth=2 softtabstop=2
+autocmd FileType python setlocal textwidth=0 shiftwidth=2 softtabstop=2
 autocmd BufNewFile,BufRead *.schema setlocal filetype=json
 
 " Make use of clang-format
