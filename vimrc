@@ -94,7 +94,8 @@ set nowrapscan
 set hlsearch
 set iskeyword&
 set mouse=a
-set clipboard=unnamed
+set ttymouse=sgr
+set clipboard=unnamedplus
 set textwidth=78
 set formatoptions=croq1jp
 set modeline
