@@ -12,12 +12,16 @@ Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rootkiter/vim-hexedit'
-Plug 'sjbach/lusty'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
 Plug 'masukomi/vim-markdown-folding'
 Plug 'junegunn/fzf'
 Plug 'vim/killersheep'
+Plug 'rust-lang/rust.vim'
+Plug 'preservim/tagbar'
+Plug 'lambdalisue/fern.vim'
+Plug 'lambdalisue/nerdfont.vim'
+Plug 'lambdalisue/vim-fern-renderer-nerdfont'
 call plug#end()
 
 "
@@ -40,6 +44,8 @@ let g:airline#extensions#searchcount#enabled = 0
 let g:airline_theme='dracula'
 
 runtime ftplugin/man.vim
+
+let mapleader='\'
 
 " Backup and swap files
 set nobackup
@@ -132,14 +138,15 @@ highlight ExtraWhitespace ctermbg=darkgreen guibg=lightgreen
 match ExtraWhitespace /\S\+\zs\s\+$/
 match ExtraWhitespace /\zs\s\+$/
 
-" for lusty explorer
-set hidden
-noremap cf :LustyFilesystemExplorer<Enter>
-
 " KeyMap
 noremap cp :CtrlPBuffer<Enter>
 nnoremap <Left> :tabp<Enter>
 nnoremap <Right> :tabn<Enter>
+nmap <F8> :TagbarToggle<CR>
+
+" Fern
+nmap <leader>f :Fern . -drawer -toggle<CR>
+let g:fern#renderer = "nerdfont"
 
 " Fold shell
 set nofoldenable
